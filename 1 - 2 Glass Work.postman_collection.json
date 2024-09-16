@@ -1,0 +1,349 @@
+{
+	"info": {
+		"_postman_id": "fb34675a-5c07-4baa-bc8e-afc4bc53d1a7",
+		"name": "1 - 2 Glass Work",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "26170410",
+		"_collection_link": "https://galactic-meteor-223659.postman.co/workspace/testCourseBelhard~7528ec5a-ff90-43e2-835c-d84d39e0d9bd/collection/26170410-fb34675a-5c07-4baa-bc8e-afc4bc53d1a7?action=share&source=collection_link&creator=26170410"
+	},
+	"item": [
+		{
+			"name": "auth/access_token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response time is less than 2000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body contains access_token\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"access_token\");\r",
+							"});\r",
+							"\r",
+							" var jsonData = pm.response.json(); \r",
+							"pm.collectionVariables.set(\"access_token\", jsonData.access_token);\r",
+							"\r",
+							"pm.test(\"Check expires_in key = 172800\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.expires_in).to.eql(172800);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "Exploratory1@1.1",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Exploratory1@1.1",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": "https://radio-shop.megaplan.by/api/v3/auth/access_token"
+			},
+			"response": []
+		},
+		{
+			"name": "contractorCompany - создаем клиента",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							" var jsonData = pm.response.json(); \r",
+							"pm.collectionVariables.set(\"company_id\", jsonData.data.id);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"contentType\": \"ContractorCompany\",\r\n    \"Category183CustomFieldKolichestvoKontaktov\": null,\r\n    \"Category183CustomFieldKommentarii\": null,\r\n    \"Category183CustomFieldDostavkaAdresDostavki\": \"по запросу\",\r\n    \"Category183CustomFieldDostavkaTelefonKlienta\": \"\",\r\n    \"Category183CustomFieldDostavkaFioPoluchatelya\": \"Lana Dana\",\r\n    \"activityType\": {\r\n        \"id\": \"1000001\",\r\n        \"contentType\": \"ContractorActivityType\"\r\n    },\r\n    \"preferTransport\": \"email\",\r\n    \"advertisingWay\": {\r\n        \"id\": \"7\",\r\n        \"contentType\": \"ContractorAdvertisingWay\"\r\n    },\r\n    \"status\": {\r\n        \"id\": \"1000000\",\r\n        \"contentType\": \"ContractorStatus\"\r\n    },\r\n    \"partners\": null,\r\n    \"competitors\": null,\r\n    \"birthday\": null,\r\n    \"responsibles\": [\r\n        {\r\n            \"id\": \"1000104\",\r\n            \"contentType\": \"Employee\"\r\n        }\r\n    ],\r\n    \"isPublic\": false,\r\n    \"description\": \"\",\r\n    \"type\": {\r\n        \"id\": \"1\",\r\n        \"contentType\": \"ContractorType\"\r\n    },\r\n    \"name\": \"My Api Collection\",\r\n    \"attaches\": [],\r\n    \"contactInfo\": [\r\n        {\r\n            \"contentType\": \"ContactInfo\",\r\n            \"type\": \"email\",\r\n            \"value\": \"kama105229@gmail.com\",\r\n            \"comment\": \"писать \"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://radio-shop.megaplan.by/api/v3/contractorCompany"
+			},
+			"response": []
+		},
+		{
+			"name": "delete responsibles - сначала нужно удалить ответственного",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://radio-shop.megaplan.by/api/v3/contractorCompany/{{company_id}}/responsibles/Employee/1000104"
+			},
+			"response": []
+		},
+		{
+			"name": "add client's descriptions - добавляем описание",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}} ",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1000105\",\r\n    \"contentType\": \"Employee\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://radio-shop.megaplan.by/api/v3/contractorCompany/{{company_id}}/responsibles"
+			},
+			"response": []
+		},
+		{
+			"name": "add client's descriptions - Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1273469\",\r\n    \"contentType\": \"ContractorCompany\",\r\n    \"attaches\": [],\r\n    \"description\": \"<p>Добавляю описание клиента. и  я добавляю описание клиента. Приветик!!!</p>\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://radio-shop.megaplan.by/api/v3/contractorCompany/{{company_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "add responseibility",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1000106\",\r\n    \"contentType\": \"Employee\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://radio-shop.megaplan.by/api/v3/contractorHuman/{{company_id}}/responsibles"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "OTI0OWQ0YWU0NzU1M2RhZjIyMDE3NWI5M2E0ZDFiODc5NWU2Zjg4OTM0NGVlMjc1MDA0ZTBiZjEwNDc2YTE1MQ"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "company_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
